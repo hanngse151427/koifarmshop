@@ -2,31 +2,56 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { Card, Col, Button, Modal } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CardProduct = ({ product }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);  
+  const navigate = useNavigate();
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  const showModal = () => {  
+    setIsModalVisible(true);  
+  };  
 
-  const handleOk = () => {
-    // Logic để thêm sản phẩm vào danh sách so sánh
-    console.log("Added to comparison:", product);
-    setIsModalVisible(false);
-  };
+  const handleOk = () => {  
+    console.log("Added to comparison:", product);  
+    setIsModalVisible(false);  
+  };  
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  const handleCancel = () => {  
+    setIsModalVisible(false);  
+  };  
+
+  // Hàm gửi yêu cầu mua hàng tới API  
+  const handlePurchase = async () => {  
+    const fishId = product.fishId; // Giả sử bạn có trường fishId trong product  
+    const quantity = 1; // Điều chỉnh số lượng ở đây nếu cần  
+
+    try {  
+      const response = await axios.post('https://localhost:7049/api/Cart/AddToCart', {  
+        fishId: fishId,  
+        quantity: quantity,  
+      });  
+      if  (response){
+        navigate('/cart') 
+
+      }
+
+      // Hiển thị thông báo thành công  
+     
+    } catch (error) {  
+      console.error('Error adding to cart:', error);  
+     
+    }  
+  };  
   return (
     <>
       <Col className='mt-3 mb-2' key={product?.id}>
         <Card className='img'
           hoverable
-          cover={<img alt={product?.name} src={product?.image} />}
+          cover={<img alt={product?.breed} src={product?.image} />}
         >
-          <Card.Meta title={product?.name} />
+          <Card.Meta title={product?.origin} />
 
           <Card.Meta
             description={
@@ -48,7 +73,7 @@ const CardProduct = ({ product }) => {
             description={
               <span>
                 <strong>Giới tính: </strong>
-                <span style={{ fontWeight: 'bold', color: '#FF5733' }}>{product?.sex}</span>
+                <span style={{ fontWeight: 'bold', color: '#FF5733' }}>{product?.gender}</span>
               </span>
             }
           />
@@ -75,13 +100,13 @@ const CardProduct = ({ product }) => {
                 <span style={{ fontWeight: 'bold', color: '#FF5733' }}>{product?.species}</span>
               </span>
             }
-          />
+          /> 
           <Card.Meta
             description={
 
               <div style={{ marginTop: "10px", display: 'flex', gap: 20 }}>
                 <Button type="default" onClick={showModal}>So sánh</Button>
-                <Button type="primary">Mua ngay</Button>
+                <Button onClick={handlePurchase} type="primary">Mua ngay</Button>
               </div>
             }
 

@@ -1,85 +1,20 @@
+import { useEffect } from "react";
 import koiList1 from "../../assets/image-list-koi-1.png";
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "2003",
-    size: "3.00 inch / 10-22 cm",
-    species: "Mix",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "",
-    size: "",
-    species: "Mix",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "",
-    size: "",
-    species: "Mix",
-  },
-  {
-    id: 4,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "",
-    size: "",
-    species: "Mix",
-  },
-  {
-    id: 5,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "",
-    size: "",
-    species: "Mix",
-  },
-  {
-    id: 6,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc: koiList1,
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "200,000 VNĐ",
-    farm: "CT",
-    gender: "UnKnown",
-    yearOfBirth: "",
-    size: "",
-    species: "Mix",
-  },
-];
+
+const [products, setproduct] = useState()
+useEffect(() => {
+  axios.get('https://localhost:7049/api/Fish/GetFishes')
+  .then(response => {
+    setproduc(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
+  
+}, [])
+
 const ListBox = () => {
   return (
     <div className="bg-white">
