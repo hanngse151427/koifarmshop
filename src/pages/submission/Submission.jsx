@@ -1,39 +1,148 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState } from "react";
 import "./Submission.css";
 
 function Submission() {
+  const [origin, setOrigin] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [price, setPrice] = useState("");
+  const [size, setSize] = useState("");
+  const [breed, setBreed] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [inventoryName, setInventoryName] = useState("");
+  const [fishImage, setfishImage] = useState(null);
+  const [certificateUrls, setCertificateUrls] = useState([]);
+  const [genderSelect, setGenderSelect] = useState("");
+  const [method, setMethod] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleFishFileChange = (e) => {
+    setFishImage(e.target.files[0]); // Chỉ cho phép một hình ảnh cá
+  };
+
+  const handleCertificateFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setCertificateUrls(files); // Lưu tất cả hình ảnh chứng nhận vào mảng
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccessMessage("");
+
+    const formData = new FormData();
+    formData.append(
+      "fishRequest",
+      JSON.stringify({
+        origin,
+        gender,
+        age,
+        price,
+        size,
+        breed,
+        description,
+        genderSelect,
+        method,
+      })
+    );
+
+    if (fishImage) {
+      Array.from(fishImage).forEach((file) => {
+        formData.append("fishImage", file);
+      });
+    }
+
+    if (certificateUrls.length > 0) {
+      certificateUrls.forEach((file) => {
+        formData.append("certificateUrls", file);
+      });
+    }
+
+    try {
+      const response = await axios.post(
+        "https://localhost:7049/api/Request/CreateSaleRequest",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setSuccessMessage("Consignment successful!");
+      // Reset form
+      setOrigin("");
+      setGender("");
+      setAge("");
+      setPrice("");
+      setSize("");
+      setBreed("");
+      setDescription("");
+      setGenderSelect("");
+      setMethod("");
+      setFishImage(null);
+      setCertificateUrls([]);
+    } catch (err) {
+      setError("An error occurred during the consignment process.");
+    }
+  };
+
   return (
     <div className="submission-page">
       <div className="form-container">
-        <h2 className="wanna">“Tôi” muốn ký gửi</h2>
+        <h2 className="wanna">“I” want to consign for sale</h2>
         <form>
           <div className="form-group">
-            <label htmlFor="fishType">Thông tin cá Koi</label>
-            <input type="text" id="fishType" placeholder="Loại cá" required />
+            <label htmlFor="fishType">Koi Fish Information</label>
+          </div>
+          <div className="form-group">
+            <label htmlFor="origin">Origin:</label>
+            <input type="text" id="origin" placeholder="Size" required />
           </div>
           <div className="form-group">
             <label htmlFor="size">Size:</label>
             <input type="text" id="size" placeholder="Size" required />
           </div>
           <div className="form-group">
-            <label htmlFor="age">Tuổi:</label>
-            <input type="text" id="age" placeholder="Tuổi" required />
+            <label htmlFor="age">Age:</label>
+            <input type="text" id="age" placeholder="Age" required />
           </div>
           <div className="form-group">
-            <label htmlFor="gender">Giống cá:</label>
-            <input type="text" id="gender" placeholder="Giống cá" required />
+            <label htmlFor="description">Description of your Koi fish:</label>
+            <textarea
+              id="description"
+              placeholder="Enter description..."
+              rows="4"
+              maxLength="200"
+              style={{
+                width: "100%",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "8px",
+                boxSizing: "border-box",
+                resize: "vertical",
+              }}
+            />
           </div>
           <div className="form-group">
-            <label htmlFor="origin">Nguồn gốc:</label>
-            <input type="text" id="origin" placeholder="Nguồn gốc" required />
+            <label htmlFor="price">Price (VND):</label>
+            <input
+              type="number"
+              id="price"
+              placeholder="Price you want to consign in VND"
+              required
+              min="0" // Ensures no negative values
+              step="1000" // Sets increments to 1,000 VND, adjust as necessary
+            />
           </div>
           <div className="form-group">
-            <label htmlFor="genderSelect">Giới tính:</label>
+            <label htmlFor="genderSelect">Gender:</label>
             <select id="genderSelect" required>
-              <option value="">Chọn giới tính</option>
-              <option value="male">Đực</option>
-              <option value="female">Cái</option>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
           </div>
           <div className="form-group">

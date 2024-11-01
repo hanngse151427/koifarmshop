@@ -64,7 +64,7 @@ const SubRouter = [
     name: "BÁN CHẠY",  
   },  
   {  
-    path: "consignment",  
+    path: "kygui",  
     name: "KÝ GỬI",  
   },  
 ];  

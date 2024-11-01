@@ -24,6 +24,8 @@ import CartPage from "./pages/cart/CartPage";
 import RegisterPage from "./pages/register/register";
 import Submission from "./pages/submission/Submission";
 import FAQ from "./pages/FAQs/faqs";
+import RequestList from './pages/request/RequestList.jsx';
+
 const router = (
     <Routes>
         <Route path="/" element={<App />}>
@@ -46,6 +48,7 @@ const router = (
         <Route path="register" element={<RegisterPage />} />
         <Route path="home" element={<HomePage />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="requestlist" element={<RequestList />} />
     </Routes>
 );
 

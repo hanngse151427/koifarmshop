@@ -5,6 +5,7 @@ import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
+  PullRequestOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -13,6 +14,8 @@ import Inventory from './Inventory';
 import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
 import Orders from './Orders';
 import Customers from './Customers';
+import GetRequestByConsignmentType from '../request/RequestList';
+import GetPendingSaleRequest from '../request/GetPendingSaleRequest';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -37,6 +40,11 @@ const items = [
     getItem('Customer Feedback', '6'),
   ]),
   getItem('Reports', '7', <FileOutlined />),
+  getItem('Requests', 'sub3', <PullRequestOutlined />, [
+    getItem('Pending Request', '9'),
+    getItem('Accepted Request', '10'),
+    getItem('Rejected Request', '11'),
+  ]),
 ];
 
 const Dashboard = () => {
@@ -138,7 +146,7 @@ const Dashboard = () => {
         return <Customers />;
       case '6':
         return <Customers />;
-        case '7': // Thêm case cho trang quản lý doanh thu
+      case '7': // Thêm case cho trang quản lý doanh thu
       return (
         <>
           <h2>Quản Lý Doanh Thu</h2>
@@ -157,7 +165,11 @@ const Dashboard = () => {
           />
         </>
       );
-
+      case '8':
+        return <ListRequest />
+      case '9':
+        return <GetPendingSaleRequest />
+      case '10':
       default:
         return <h2>Welcome to the Koi Fish Management Dashboard</h2>;
     }
