@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import photo from "../../../public/photo.svg";  
 import hoso from "../../assets/ho-so.svg";  
 import cart from "../../assets/cart.svg";  
@@ -6,8 +7,6 @@ import support from "../../assets/phone.svg";
 import searchIcon from "../../assets/search.svg";  
 import listIcon from "../../assets/list.svg";  
 import admin from "../../assets/10582607-1.svg";  
-
-import React from "react";  
 
 const RouteMain = [  
   {  
@@ -70,7 +69,40 @@ const SubRouter = [
 ];  
 
 const Header = () => {  
-  const userName = localStorage.getItem("userName"); // Lấy userName từ localStorage  
+  const userName = localStorage.getItem("userName"); 
+  const [cartItemCount, setCartItemCount] = useState(0); 
+
+  // Hàm để tính số lượng sản phẩm trong giỏ hàng
+  const updateCartItemCount = () => {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+    setCartItemCount(totalCount); 
+  };
+
+  useEffect(() => {
+    updateCartItemCount(); // Cập nhật số lượng khi component mount
+    const handleStorageChange = () => updateCartItemCount(); // Cập nhật khi có thay đổi
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); 
+
+  // Hàm xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = (product) => {
+    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cartItems.find(item => item.fishId === product.fishId);
+    
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cartItems.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    updateCartItemCount(); // Cập nhật số lượng ngay lập tức
+  };
 
   return (  
     <header className="shadow-md w-full">  
@@ -114,6 +146,11 @@ const Header = () => {
               >  
                 <img src={route.icon} alt={route.name} className="h-8 w-8" />  
                 <span>{route.name}</span>  
+                {route.path === "/cart" && cartItemCount > 0 && ( // Kiểm tra nếu là giỏ hàng và có sản phẩm
+                  <span className="bg-red-500 text-white rounded-full px-2 text-xs ml-2">
+                    {cartItemCount}
+                  </span>
+                )}
               </a>  
             </div>  
           ))  

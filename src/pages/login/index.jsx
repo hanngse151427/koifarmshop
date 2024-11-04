@@ -40,7 +40,7 @@ function LoginPage() {
         navigate("/dashboard");
       } else if (response.data.data.role === 2) {
 
-        navigate("/");
+        navigate('/');
       } else {
 
       }
